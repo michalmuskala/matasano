@@ -1,8 +1,9 @@
 defmodule Matasano.BitTools do
-  import Bitwise
+  require Bitwise
 
   @doc """
   Converts hex-encoded string to base64-encoded
+
   Matasano Set 1 Challenge 1
   """
   def hex_to_base64(""), do: ""
@@ -18,6 +19,7 @@ defmodule Matasano.BitTools do
 
   @doc """
   XORs two hex-encoded strings together
+
   Matasano Set 1 Challenge 2
   """
   def xor_strings("", ""), do: ""
@@ -25,21 +27,22 @@ defmodule Matasano.BitTools do
   def xor_strings(hex1, hex2) when byte_size(hex1) == byte_size(hex2) do
     [hex1, hex2]
     |> Enum.map(&hex_decode_list/1)
+    |> List.to_tuple
     |> do_xor_strings
     |> case do
-         :error -> :error
-         string -> Base.encode16(string, case: :lower)
+         string when is_binary(string) -> Base.encode16(string, case: :lower)
+         :error                        -> :error
        end
   end
 
   def xor_strings(_, _), do: :error
 
-  defp do_xor_strings([:error | _]), do: :error
-  defp do_xor_strings([_ | [:error]]), do: :error
+  defp do_xor_strings({:error, _}), do: :error
+  defp do_xor_strings({_, :error}), do: :error
 
-  defp do_xor_strings([string1 | [string2]]) do
+  defp do_xor_strings({string1, string2}) do
     for {x, y} <- Enum.zip(string1, string2), into: "" do
-      << bxor(x, y) >>
+      << Bitwise.bxor(x, y) >>
     end
   end
 
