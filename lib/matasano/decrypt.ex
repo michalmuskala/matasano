@@ -1,4 +1,4 @@
-defmodule Matasano.Solver do
+defmodule Matasano.Decrypt do
   alias Matasano.Frequency
   alias Matasano.BitTools
 
