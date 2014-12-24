@@ -52,4 +52,19 @@ defmodule Matasano.BitTools do
       :error         -> :error
     end
   end
+
+  @doc """
+  XORs string against single char
+
+  Matasano Set 1 Challenge 3
+  """
+  def xor_string("", _), do: ""
+
+  def xor_string(string, char) when is_binary(string) and is_integer(char) do
+    for << c <- string >>, into: "" do
+      << Bitwise.bxor(c, char) >>
+    end
+  end
+
+  def xor_string(_, _), do: :error
 end
